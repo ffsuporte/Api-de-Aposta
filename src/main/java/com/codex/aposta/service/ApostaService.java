@@ -5,6 +5,7 @@ import com.codex.aposta.model.Aposta;
 import com.codex.aposta.model.Apostador;
 import com.codex.aposta.model.dto.ApostaIn;
 import com.codex.aposta.model.dto.ApostaOut;
+import com.codex.aposta.model.dto.ApostasOut;
 import com.codex.aposta.repository.ApostaRepository;
 import com.codex.aposta.repository.ApostadorRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -43,5 +42,18 @@ public class ApostaService {
 
         return apostaOut;
 
+    }
+
+    public List<ApostasOut> buscaApostasPorIdApostador(Long idApostador) {
+        List<Aposta> apostaList = apostaRepository.findByIdApostador(idApostador);
+        List<ApostasOut> list = new ArrayList<>();
+
+        apostaList.forEach(apostas -> {
+            ApostasOut apostasOut = new ApostasOut();
+            apostasOut.setIdApostador(apostas.getApostador().getId());
+            apostasOut.setNumeroAposta(apostas.getNumeroAposta());
+            list.add(apostasOut);
+        });
+        return list;
     }
 }
